@@ -24,28 +24,36 @@ This repository provides an easy way to run the complete Web Messages (OneTimeCh
 ## Quick Start
 
 1. Clone this repository:
+
    ```bash
-   git clone <this-repo-url>
+   git clone https://github.com/appdevjohn/web-messages
    cd web-messages
    ```
 
 2. Copy the environment file and configure it:
+
    ```bash
    cp .env.example .env
    ```
+
    Edit `.env` and set at minimum:
+
    - `TOKEN_SECRET` - A secure random string for JWT signing
    - Other settings as needed (see Configuration section below)
 
 3. Run the setup command:
+
    ```bash
    make setup
    ```
+
    This will:
+
    - Clone the three project repositories
    - Build Docker images for all services
 
 4. Start the application:
+
    ```bash
    make start
    ```
@@ -59,17 +67,17 @@ This repository provides an easy way to run the complete Web Messages (OneTimeCh
 
 Run `make help` to see all available commands:
 
-| Command | Description |
-|---------|-------------|
-| `make setup` | Clone repositories and build Docker images |
-| `make clone` | Clone the three project repositories |
-| `make build` | Build all Docker images |
-| `make start` | Start all services |
-| `make stop` | Stop all services |
-| `make restart` | Restart all services |
-| `make logs` | View logs from all services |
-| `make pull` | Pull latest changes from all repositories |
-| `make clean` | Remove cloned repos and Docker volumes |
+| Command        | Description                                |
+| -------------- | ------------------------------------------ |
+| `make setup`   | Clone repositories and build Docker images |
+| `make clone`   | Clone the three project repositories       |
+| `make build`   | Build all Docker images                    |
+| `make start`   | Start all services                         |
+| `make stop`    | Stop all services                          |
+| `make restart` | Restart all services                       |
+| `make logs`    | View logs from all services                |
+| `make pull`    | Pull latest changes from all repositories  |
+| `make clean`   | Remove cloned repos and Docker volumes     |
 
 ## Configuration
 
@@ -78,14 +86,17 @@ Run `make help` to see all available commands:
 Edit the `.env` file to configure the application. The most important settings are:
 
 **Security:**
+
 - `TOKEN_SECRET` - **REQUIRED** - JWT signing secret (use a long random string)
 
 **Database:**
+
 - `POSTGRES_USER` - Database username (default: `user`)
 - `POSTGRES_PASSWORD` - Database password (default: `password1`)
 - `POSTGRES_DB` - Database name (default: `messages_db`)
 
 **Application:**
+
 - `APP_NAME` - Application name displayed to users (default: `OneTimeChat`)
 - `APP_BASE_URL` - Frontend URL (default: `http://localhost:3000`)
 - `BASE_URL` - Backend URL (default: `http://localhost:8000`)
@@ -94,10 +105,12 @@ Edit the `.env` file to configure the application. The most important settings a
 
 **Email Verification:**
 Set `VERIFY_USERS=true` and `SEND_EMAILS=true` to enable email verification. Requires:
+
 - `SENDGRID_API_KEY` - Your SendGrid API key
 
 **Image Uploads:**
-- `ENABLE_UPLOADS` - Set to `true` to allow image uploads in messages (default: `true`)
+
+- `ENABLE_UPLOADS` - Set to `true` to allow image uploads in messages (default: `false`)
 
 ## Project Structure
 
@@ -140,11 +153,13 @@ make restart
 ### Viewing Logs
 
 To view logs from all services:
+
 ```bash
 make logs
 ```
 
 To view logs from a specific service:
+
 ```bash
 docker-compose logs -f service-name
 ```
@@ -156,6 +171,7 @@ Service names: `db`, `service`, `pwa`
 ### Services won't start
 
 1. Check if ports 3000, 5432, or 8000 are already in use:
+
    ```bash
    lsof -i :3000
    lsof -i :5432
@@ -170,11 +186,13 @@ Service names: `db`, `service`, `pwa`
 ### Database connection errors
 
 1. Ensure the database service is healthy:
+
    ```bash
    docker-compose ps
    ```
 
 2. Check database logs:
+
    ```bash
    docker-compose logs db
    ```
@@ -220,6 +238,7 @@ To contribute to any of the components, please refer to their respective reposit
 ## Support
 
 For issues related to:
+
 - **Database setup** - Open an issue in [web-messages-db](https://github.com/appdevjohn/web-messages-db/issues)
 - **Backend API** - Open an issue in [web-messages-service](https://github.com/appdevjohn/web-messages-service/issues)
 - **Frontend UI** - Open an issue in [web-messages-pwa](https://github.com/appdevjohn/web-messages-pwa/issues)
