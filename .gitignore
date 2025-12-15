@@ -1,0 +1,13 @@
+# Environment variables
+.env
+
+# Cloned repositories
+web-messages-db/
+web-messages-service/
+web-messages-pwa/
+
+# macOS
+.DS_Store
+
+# Docker volumes
+*.log

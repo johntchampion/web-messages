@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  db:
+    build: ./web-messages-db
+    container_name: web-messages-db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password1}
+      - POSTGRES_DB=${POSTGRES_DB:-messages_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user} -d ${POSTGRES_DB:-messages_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - web-messages-network
+
+  service:
+    build: ./web-messages-service
+    container_name: web-messages-service
+    environment:
+      - PGUSER=${POSTGRES_USER:-user}
+      - PGHOST=db
+      - PGDATABASE=${POSTGRES_DB:-messages_db}
+      - PGPASSWORD=${POSTGRES_PASSWORD:-password1}
+      - PGPORT=5432
+      - PORT=8000
+      - TOKEN_SECRET=${TOKEN_SECRET}
+      - APP_BASE_URL=${APP_BASE_URL:-http://localhost:3000}
+      - BASE_URL=${BASE_URL:-http://localhost:8000}
+      - APP_NAME=${APP_NAME:-OneTimeChat}
+      - VERIFY_USERS=${VERIFY_USERS:-false}
+      - SEND_EMAILS=${SEND_EMAILS:-false}
+      - ENABLE_UPLOADS=${ENABLE_UPLOADS:-true}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - NODE_ENV=${NODE_ENV:-production}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - web-messages-network
+
+  pwa:
+    build:
+      context: ./web-messages-pwa
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8000}
+        - VITE_APP_NAME=${VITE_APP_NAME:-OneTimeChat}
+    container_name: web-messages-pwa
+    environment:
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8000}
+      - VITE_APP_NAME=${VITE_APP_NAME:-OneTimeChat}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - service
+    networks:
+      - web-messages-network
+
+volumes:
+  postgres_data:
+
+networks:
+  web-messages-network:
+    driver: bridge
