@@ -11,3 +11,7 @@ web-messages-pwa/
 
 # Docker volumes
 *.log
+
+# System preferences
+.vscode/
+web-messages.code-workspace

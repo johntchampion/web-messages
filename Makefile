@@ -7,12 +7,12 @@ help:
 	@echo "  make setup    - Clone all repos and set up the project"
 	@echo "  make clone    - Clone the three project repositories"
 	@echo "  make build    - Build all Docker images"
-	@echo "  make start    - Start all services with docker-compose"
+	@echo "  make start    - Start all services with docker compose"
 	@echo "  make stop     - Stop all services"
 	@echo "  make restart  - Restart all services"
 	@echo "  make logs     - View logs from all services"
 	@echo "  make pull     - Pull latest changes from all repositories"
-	@echo "  make clean    - Remove all cloned repositories and Docker volumes"
+	@echo "  make clean    - Remove Docker volumes and images"
 	@echo ""
 	@echo "Quick start:"
 	@echo "  1. Copy .env.example to .env and configure it"
@@ -52,12 +52,12 @@ clone:
 
 build:
 	@echo "Building Docker images..."
-	@docker-compose build
+	@docker compose build
 	@echo "✓ Docker images built"
 
 start:
 	@echo "Starting services..."
-	@docker-compose up -d
+	@docker compose up -d
 	@echo ""
 	@echo "✓ Services started!"
 	@echo ""
@@ -70,13 +70,13 @@ start:
 
 stop:
 	@echo "Stopping services..."
-	@docker-compose down
+	@docker compose down
 	@echo "✓ Services stopped"
 
 restart: stop start
 
 logs:
-	@docker-compose logs -f
+	@docker compose logs -f
 
 pull:
 	@echo "Pulling latest changes from repositories..."
@@ -96,7 +96,7 @@ pull:
 
 clean:
 	@echo "Cleaning up..."
-	@docker-compose down -v
-	@echo "Removing cloned repositories..."
-	@rm -rf web-messages-db web-messages-service web-messages-pwa
+	@docker compose down -v --rmi all
+# 	@echo "Removing cloned repositories..."
+# 	@rm -rf web-messages-db web-messages-service web-messages-pwa
 	@echo "✓ Cleanup complete"
