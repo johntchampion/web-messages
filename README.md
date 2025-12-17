@@ -1,6 +1,6 @@
 # Web Messages - Complete Application Stack
 
-This repository provides an easy way to run the complete Web Messages (OneTimeChat) application stack locally using Docker Compose. It orchestrates three separate services:
+This repository provides a complete development environment for the Web Messages application stack using Docker Compose. It orchestrates three separate services with hot-reload capabilities for rapid development:
 
 - **Database** ([web-messages-db](https://github.com/appdevjohn/web-messages-db)) - PostgreSQL database with schema setup
 - **Backend Service** ([web-messages-service](https://github.com/appdevjohn/web-messages-service)) - Express.js REST API with Socket.IO for real-time messaging
@@ -15,6 +15,13 @@ This repository provides an easy way to run the complete Web Messages (OneTimeCh
 - Optional user authentication for creating conversations
 - Optional email verification and password reset
 
+## Development Features
+
+- **Hot Reload**: Code changes are reflected immediately without rebuilding containers
+- **Development Mode**: Services run with development configurations (NODE_ENV=development)
+- **Live Code Editing**: Bind mounts sync your local code changes to containers in real-time
+- **Fast Iteration**: Make changes and see results instantly in your browser
+
 ## Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
@@ -22,6 +29,8 @@ This repository provides an easy way to run the complete Web Messages (OneTimeCh
 - Git
 
 ## Quick Start
+
+This will set up a complete development environment with hot-reload enabled for both frontend and backend.
 
 1. Clone this repository:
 
@@ -49,19 +58,27 @@ This repository provides an easy way to run the complete Web Messages (OneTimeCh
 
    This will:
 
-   - Clone the three project repositories
-   - Build Docker images for all services
+   - Clone the three project repositories into subdirectories
+   - Build Docker images for all services using development Dockerfiles
 
-4. Start the application:
+4. Start the application in development mode:
 
    ```bash
    make start
    ```
 
+   All services will start with hot-reload enabled. Code changes in `web-messages-service` and `web-messages-pwa` will be reflected immediately.
+
 5. Access the application:
-   - **Frontend**: http://localhost:3000
-   - **Backend API**: http://localhost:8000
+
+   - **Frontend**: http://localhost:3000 (with Vite HMR)
+   - **Backend API**: http://localhost:8000 (with nodemon auto-restart)
    - **Database**: postgresql://localhost:5432
+
+6. Start developing:
+   - Edit files in `web-messages-service/src/` or `web-messages-pwa/src/`
+   - Changes will be reflected automatically without rebuilding containers
+   - View logs with `make logs` to see server restart notifications
 
 ## Available Commands
 
@@ -116,15 +133,44 @@ Set `VERIFY_USERS=true` and `SEND_EMAILS=true` to enable email verification. Req
 
 ### Making Changes
 
-The three service directories (`web-messages-db`, `web-messages-service`, `web-messages-pwa`) are separate Git repositories. To make changes:
+The three service directories (`web-messages-db`, `web-messages-service`, `web-messages-pwa`) are separate Git repositories with bind mounts for live development:
 
-1. Navigate to the specific service directory
-2. Make your changes
-3. Rebuild the affected service:
+**Backend Service (web-messages-service):**
+
+1. Edit TypeScript files in `web-messages-service/src/`
+2. Changes are automatically detected and the server restarts (via nodemon)
+3. No rebuild or restart needed - just refresh your API requests
+
+**Frontend PWA (web-messages-pwa):**
+
+1. Edit React components in `web-messages-pwa/src/`
+2. Vite's hot module replacement (HMR) updates the browser instantly
+3. No rebuild or restart needed - changes appear immediately
+
+**Database (web-messages-db):**
+
+1. Schema changes require rebuilding the database container:
    ```bash
    make build
    make restart
    ```
+
+### When to Rebuild
+
+You only need to rebuild containers when:
+
+- Installing new npm dependencies (updating `package.json`)
+- Changing Dockerfile or Docker configuration
+- Modifying database schema or initialization scripts
+
+To rebuild a specific service:
+
+```bash
+docker compose build service  # Backend only
+docker compose build pwa      # Frontend only
+docker compose build db       # Database only
+make restart                  # Restart all services
+```
 
 ### Updating to Latest Version
 
@@ -199,15 +245,27 @@ Service names: `db`, `service`, `pwa`
 
 ## Production Deployment
 
-This setup is designed for local development. For production deployment:
+This setup is configured for local development with hot-reload and development dependencies. For production deployment, you'll need to:
 
-1. Update environment variables in `.env` for production values
-2. Set secure passwords and secrets
-3. Configure proper CORS settings
-4. Use a reverse proxy (nginx) for the frontend
-5. Enable SSL/TLS certificates
-6. Set up proper database backups
-7. Configure email service (SendGrid) if using email features
+1. **Use Production Dockerfiles**: Create production Dockerfiles (without `.dev` suffix) that:
+   - Build optimized production bundles
+   - Use `NODE_ENV=production`
+   - Don't include development dependencies
+   - Don't use bind mounts (code should be copied into image)
+2. **Update docker-compose.yml**: Reference production Dockerfiles instead of `Dockerfile.dev`
+3. **Environment Configuration**:
+   - Set secure passwords and secrets
+   - Configure proper CORS settings
+   - Set `NODE_ENV=production`
+4. **Infrastructure**:
+   - Use a reverse proxy (nginx/Caddy) for SSL termination
+   - Enable SSL/TLS certificates (Let's Encrypt)
+   - Set up proper database backups and persistence
+   - Configure email service (SendGrid) if using email features
+5. **Security**:
+   - Remove or secure exposed ports
+   - Use Docker secrets for sensitive values
+   - Implement rate limiting and security headers
 
 ## License
 

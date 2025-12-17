@@ -19,7 +19,9 @@ services:
       - web-messages-network
 
   service:
-    build: ./web-messages-service
+    build:
+      context: ./web-messages-service
+      dockerfile: Dockerfile.dev
     container_name: web-messages-service
     environment:
       - PGUSER=${POSTGRES_USER:-user}
@@ -27,7 +29,6 @@ services:
       - PGDATABASE=${POSTGRES_DB:-messages_db}
       - PGPASSWORD=${POSTGRES_PASSWORD:-password1}
       - PGPORT=5432
-      - PORT=${SERVICE_PORT:-8000}
       - TOKEN_SECRET=${TOKEN_SECRET}
       - APP_BASE_URL=${APP_BASE_URL:-http://localhost:3000}
       - BASE_URL=${BASE_URL:-http://localhost:8000}
@@ -36,9 +37,13 @@ services:
       - SEND_EMAILS=${SEND_EMAILS:-false}
       - ENABLE_UPLOADS=${ENABLE_UPLOADS:-true}
       - SENDGRID_API_KEY=${SENDGRID_API_KEY}
-      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=${SERVICE_PORT:-8000}
+      - NODE_ENV=${NODE_ENV:-test}
     ports:
       - "${SERVICE_PORT:-8000}:${SERVICE_PORT:-8000}"
+    volumes:
+      - ./web-messages-service:/app
+      - /app/node_modules
     depends_on:
       db:
         condition: service_healthy
@@ -48,9 +53,7 @@ services:
   pwa:
     build:
       context: ./web-messages-pwa
-      args:
-        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8000}
-        - VITE_APP_NAME=${VITE_APP_NAME:-OneTimeChat}
+      dockerfile: Dockerfile.dev
     container_name: web-messages-pwa
     environment:
       - PORT=${PWA_PORT:-3000}
@@ -58,6 +61,9 @@ services:
       - VITE_APP_NAME=${VITE_APP_NAME:-OneTimeChat}
     ports:
       - "${PWA_PORT:-3000}:${PWA_PORT:-3000}"
+    volumes:
+      - ./web-messages-pwa:/app
+      - /app/node_modules
     depends_on:
       - service
     networks:
