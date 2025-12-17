@@ -1,5 +1,14 @@
 # Web Messages - Complete Application Stack
 
+<img src="assets/thread-screenshot.png" alt="Conversation Thread">
+<details>
+    <summary><strong>More Screenshots</strong></summary>
+  <img src="assets/edit-profile-screenshot.png">
+  <img src="assets/conversations-screenshot.png">
+  <img src="assets/landing-screenshot.png">
+
+</details>
+
 This repository provides a complete development environment for the Web Messages application stack using Docker Compose. It orchestrates three separate services with hot-reload capabilities for rapid development:
 
 - **Database** ([web-messages-db](https://github.com/appdevjohn/web-messages-db)) - PostgreSQL database with schema setup
