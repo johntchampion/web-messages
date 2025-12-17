@@ -26,7 +26,7 @@ setup: clone build
 	@echo "Next steps:"
 	@echo "  1. Make sure you have configured your .env file"
 	@echo "  2. Run 'make start' to start the application"
-	@echo "  3. Access the app at http://localhost:3000"
+	@echo "  3. Access the app on localhost as per your .env configuration"
 
 clone:
 	@echo "Cloning repositories..."
@@ -58,15 +58,7 @@ build:
 start:
 	@echo "Starting services..."
 	@docker compose up -d
-	@echo ""
-	@echo "✓ Services started!"
-	@echo ""
-	@echo "Service URLs:"
-	@echo "  Frontend:  http://localhost:3000"
-	@echo "  Backend:   http://localhost:8000"
-	@echo "  Database:  postgresql://localhost:5432"
-	@echo ""
-	@echo "Run 'make logs' to view service logs"
+	@echo "✓ Services started! Run 'make logs' to view service logs."
 
 stop:
 	@echo "Stopping services..."
@@ -97,6 +89,4 @@ pull:
 clean:
 	@echo "Cleaning up..."
 	@docker compose down -v --rmi all
-# 	@echo "Removing cloned repositories..."
-# 	@rm -rf web-messages-db web-messages-service web-messages-pwa
 	@echo "✓ Cleanup complete"
