@@ -112,19 +112,6 @@ Set `VERIFY_USERS=true` and `SEND_EMAILS=true` to enable email verification. Req
 
 - `ENABLE_UPLOADS` - Set to `true` to allow image uploads in messages (default: `false`)
 
-## Project Structure
-
-```
-web-messages/
-├── Makefile              # Build and deployment commands
-├── docker-compose.yml    # Docker Compose orchestration
-├── .env.example          # Environment variable template
-├── README.md             # This file
-├── web-messages-db/      # Database repository (cloned)
-├── web-messages-service/ # Backend repository (cloned)
-└── web-messages-pwa/     # Frontend repository (cloned)
-```
-
 ## Development Workflow
 
 ### Making Changes
@@ -132,9 +119,8 @@ web-messages/
 The three service directories (`web-messages-db`, `web-messages-service`, `web-messages-pwa`) are separate Git repositories. To make changes:
 
 1. Navigate to the specific service directory
-2. Create a new branch and make your changes
-3. Commit and push to the respective repository
-4. Rebuild the affected service:
+2. Make your changes
+3. Rebuild the affected service:
    ```bash
    make build
    make restart
