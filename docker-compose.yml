@@ -32,6 +32,7 @@ services:
       - TOKEN_SECRET=${TOKEN_SECRET}
       - APP_BASE_URL=${APP_BASE_URL:-http://localhost:3000}
       - BASE_URL=${BASE_URL:-http://localhost:8000}
+      - SOCKET_PATH=${SOCKET_PATH:-/socket.io}
       - APP_NAME=${APP_NAME:-OneTimeChat}
       - VERIFY_USERS=${VERIFY_USERS:-false}
       - SEND_EMAILS=${SEND_EMAILS:-false}
@@ -58,6 +59,7 @@ services:
     environment:
       - PORT=${PWA_PORT:-3000}
       - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:8000}
+      - VITE_SOCKET_PATH=${VITE_SOCKET_PATH:-/socket.io}
       - VITE_APP_NAME=${VITE_APP_NAME:-OneTimeChat}
     ports:
       - "${PWA_PORT:-3000}:${PWA_PORT:-3000}"
