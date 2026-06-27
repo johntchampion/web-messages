@@ -9,10 +9,9 @@
 
 </details>
 
-This repository provides a complete development environment for the Web Messages application stack using Docker Compose. It orchestrates three separate services with hot-reload capabilities for rapid development:
+This repository provides a complete development environment for the Web Messages application stack using Docker Compose. It orchestrates three services across two repositories, with hot-reload capabilities for rapid development:
 
-- **Database** ([web-messages-db](https://github.com/appdevjohn/web-messages-db)) - PostgreSQL database with schema setup
-- **Backend Service** ([web-messages-service](https://github.com/appdevjohn/web-messages-service)) - Express.js REST API with Socket.IO for real-time messaging
+- **Backend Service** ([web-messages-service](https://github.com/appdevjohn/web-messages-service)) - Express.js REST API with Socket.IO for real-time messaging. The PostgreSQL database (schema setup, Dockerfile, and `pg_hba.conf`) lives inside this repo under `database/`, since the service depends on it.
 - **Frontend PWA** ([web-messages-pwa](https://github.com/appdevjohn/web-messages-pwa)) - React Progressive Web App
 
 ## Features
@@ -67,7 +66,7 @@ This will set up a complete development environment with hot-reload enabled for 
 
    This will:
 
-   - Clone the three project repositories into subdirectories
+   - Clone the two project repositories (`web-messages-service`, `web-messages-pwa`) into subdirectories
    - Build Docker images for all services using development Dockerfiles
 
 4. Start the application in development mode:
@@ -96,7 +95,7 @@ Run `make help` to see all available commands:
 | Command        | Description                                |
 | -------------- | ------------------------------------------ |
 | `make setup`   | Clone repositories and build Docker images |
-| `make clone`   | Clone the three project repositories       |
+| `make clone`   | Clone the two project repositories         |
 | `make build`   | Build all Docker images                    |
 | `make start`   | Start all services                         |
 | `make stop`    | Stop all services                          |
@@ -142,7 +141,7 @@ Set `VERIFY_USERS=true` and `SEND_EMAILS=true` to enable email verification. Req
 
 ### Making Changes
 
-The three service directories (`web-messages-db`, `web-messages-service`, `web-messages-pwa`) are separate Git repositories with bind mounts for live development:
+The two project directories (`web-messages-service`, `web-messages-pwa`) are separate Git repositories with bind mounts for live development. The PostgreSQL database now lives inside the service repo at `web-messages-service/database/`:
 
 **Backend Service (web-messages-service):**
 
@@ -156,9 +155,10 @@ The three service directories (`web-messages-db`, `web-messages-service`, `web-m
 2. Vite's hot module replacement (HMR) updates the browser instantly
 3. No rebuild or restart needed - changes appear immediately
 
-**Database (web-messages-db):**
+**Database (web-messages-service/database):**
 
-1. Schema changes require rebuilding the database container:
+1. The schema and Docker setup (`setup.sql`, `Dockerfile`, `pg_hba.conf`) live in `web-messages-service/database/`.
+2. Schema changes require rebuilding the database container:
    ```bash
    make build
    make restart
@@ -284,15 +284,14 @@ Each component has its own license. Refer to the individual repositories for det
 
 To contribute to any of the components, please refer to their respective repositories:
 
-- [web-messages-db](https://github.com/appdevjohn/web-messages-db)
-- [web-messages-service](https://github.com/appdevjohn/web-messages-service)
+- [web-messages-service](https://github.com/appdevjohn/web-messages-service) (includes the database under `database/`)
 - [web-messages-pwa](https://github.com/appdevjohn/web-messages-pwa)
 
 ## Support
 
 For issues related to:
 
-- **Database setup** - Open an issue in [web-messages-db](https://github.com/appdevjohn/web-messages-db/issues)
+- **Database setup** - Open an issue in [web-messages-service](https://github.com/appdevjohn/web-messages-service/issues) (the database lives under `database/`)
 - **Backend API** - Open an issue in [web-messages-service](https://github.com/appdevjohn/web-messages-service/issues)
 - **Frontend UI** - Open an issue in [web-messages-pwa](https://github.com/appdevjohn/web-messages-pwa/issues)
 - **This integration** - Open an issue in this repository

@@ -1,7 +1,8 @@
 services:
   db:
-    build: ./web-messages-db
+    build: ./web-messages-service/database
     container_name: web-messages-db
+    command: ["postgres", "-c", "hba_file=/etc/postgresql/pg_hba.conf"]
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password1}

@@ -2,7 +2,6 @@
 .env
 
 # Cloned repositories
-web-messages-db/
 web-messages-service/
 web-messages-pwa/
 

@@ -5,7 +5,7 @@ help:
 	@echo ""
 	@echo "Available commands:"
 	@echo "  make setup    - Clone all repos and set up the project"
-	@echo "  make clone    - Clone the three project repositories"
+	@echo "  make clone    - Clone the two project repositories"
 	@echo "  make build    - Build all Docker images"
 	@echo "  make start    - Start all services with docker compose"
 	@echo "  make stop     - Stop all services"
@@ -30,12 +30,6 @@ setup: clone build
 
 clone:
 	@echo "Cloning repositories..."
-	@if [ ! -d "web-messages-db" ]; then \
-		echo "Cloning web-messages-db..."; \
-		git clone https://github.com/appdevjohn/web-messages-db.git; \
-	else \
-		echo "web-messages-db already exists, skipping..."; \
-	fi
 	@if [ ! -d "web-messages-service" ]; then \
 		echo "Cloning web-messages-service..."; \
 		git clone https://github.com/appdevjohn/web-messages-service.git; \
@@ -72,10 +66,6 @@ logs:
 
 pull:
 	@echo "Pulling latest changes from repositories..."
-	@if [ -d "web-messages-db" ]; then \
-		echo "Pulling web-messages-db..."; \
-		cd web-messages-db && git pull && cd ..; \
-	fi
 	@if [ -d "web-messages-service" ]; then \
 		echo "Pulling web-messages-service..."; \
 		cd web-messages-service && git pull && cd ..; \
