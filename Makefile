@@ -1,63 +1,27 @@
-.PHONY: help setup clone build start stop restart logs clean pull
+.PHONY: help setup start stop restart logs pull clean
 
 help:
-	@echo "Web Messages - Local Development Setup"
+	@echo "Web Messages - Local Development"
 	@echo ""
-	@echo "Available commands:"
-	@echo "  make setup    - Clone all repos and set up the project"
-	@echo "  make clone    - Clone the two project repositories"
-	@echo "  make build    - Build all Docker images"
-	@echo "  make start    - Start all services with docker compose"
-	@echo "  make stop     - Stop all services"
-	@echo "  make restart  - Restart all services"
-	@echo "  make logs     - View logs from all services"
-	@echo "  make pull     - Pull latest changes from all repositories"
-	@echo "  make clean    - Remove Docker volumes and images"
-	@echo ""
-	@echo "Quick start:"
-	@echo "  1. Copy .env.example to .env and configure it"
-	@echo "  2. Run 'make setup' to clone repos and build images"
-	@echo "  3. Run 'make start' to start all services"
+	@echo "  make setup    - Clone web-messages-service and web-messages-pwa"
+	@echo "  make start    - Start the service and PWA"
+	@echo "  make stop     - Stop both"
+	@echo "  make restart  - Restart both"
+	@echo "  make logs     - Follow logs from both"
+	@echo "  make pull     - Pull latest changes in both repositories"
+	@echo "  make clean    - Stop both and remove their node_modules volumes"
 
-setup: clone build
-	@echo ""
-	@echo "✓ Setup complete!"
-	@echo ""
-	@echo "Next steps:"
-	@echo "  1. Make sure you have configured your .env file"
-	@echo "  2. Run 'make start' to start the application"
-	@echo "  3. Access the app on localhost as per your .env configuration"
-
-clone:
-	@echo "Cloning repositories..."
-	@if [ ! -d "web-messages-service" ]; then \
-		echo "Cloning web-messages-service..."; \
-		git clone https://github.com/appdevjohn/web-messages-service.git; \
-	else \
-		echo "web-messages-service already exists, skipping..."; \
-	fi
-	@if [ ! -d "web-messages-pwa" ]; then \
-		echo "Cloning web-messages-pwa..."; \
-		git clone https://github.com/appdevjohn/web-messages-pwa.git; \
-	else \
-		echo "web-messages-pwa already exists, skipping..."; \
-	fi
-	@echo "✓ Repositories cloned"
-
-build:
-	@echo "Building Docker images..."
-	@docker compose build
-	@echo "✓ Docker images built"
+setup:
+	@[ -d web-messages-service ] || git clone https://github.com/appdevjohn/web-messages-service.git
+	@[ -d web-messages-pwa ] || git clone https://github.com/appdevjohn/web-messages-pwa.git
+	@echo "✓ Repositories ready. Run 'make start'."
 
 start:
-	@echo "Starting services..."
 	@docker compose up -d
-	@echo "✓ Services started! Run 'make logs' to view service logs."
+	@echo "✓ Started. The first start installs dependencies; run 'make logs' to follow along."
 
 stop:
-	@echo "Stopping services..."
 	@docker compose down
-	@echo "✓ Services stopped"
 
 restart: stop start
 
@@ -65,18 +29,8 @@ logs:
 	@docker compose logs -f
 
 pull:
-	@echo "Pulling latest changes from repositories..."
-	@if [ -d "web-messages-service" ]; then \
-		echo "Pulling web-messages-service..."; \
-		cd web-messages-service && git pull && cd ..; \
-	fi
-	@if [ -d "web-messages-pwa" ]; then \
-		echo "Pulling web-messages-pwa..."; \
-		cd web-messages-pwa && git pull && cd ..; \
-	fi
-	@echo "✓ All repositories updated"
+	@git -C web-messages-service pull
+	@git -C web-messages-pwa pull
 
 clean:
-	@echo "Cleaning up..."
-	@docker compose down -v --rmi all
-	@echo "✓ Cleanup complete"
+	@docker compose down -v
